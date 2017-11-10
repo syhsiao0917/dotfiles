@@ -2,50 +2,14 @@ winp 27 1
 set lines=170
 set columns=100
 
-
 inoremap <c-t> <C-R>=strftime("%H:%M")<CR><Space>
 inoremap <c-r><c-t> <C-R>=strftime("%H:%M")<CR><Space>
 inoremap <c-r><c-d> <C-R>=strftime("%Y%m%d")<CR><Space>
 
-nnoremap <a-e> :e .<CR>
 set noerrorbells visualbell t_vb=
 autocmd GUIEnter * set visualbell t_vb=
 
-" source $VIMRUNTIME/vimrc_example.vim
-" source $VIMRUNTIME/mswin.vim
-" behave mswin
-
-set diffexpr=MyDiff()
-function MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      if empty(&shellxquote)
-        let l:shxq_sav = ''
-        set shellxquote&
-      endif
-      let cmd = '"' . $VIMRUNTIME . '\diff"'
-    else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
-  if exists('l:shxq_sav')
-    let &shellxquote=l:shxq_sav
-  endif
-endfunction
-
-
+nnoremap <a-e> :e .<CR>
 
 " nnoremap <a-d> :edit ~/prj<CR>
 
@@ -53,9 +17,6 @@ endfunction
 set foldopen-=search
  
 set paste
-" set clipboard=unnamed
-" set clipboard=unnamedplus
-
 
 set backspace=2
 set backspace=indent,eol,start
@@ -63,34 +24,20 @@ set backspace=indent,eol,start
 " keep command or search history
 set history=400
 
-set guioptions-=m
 set nocompatible
  
+" GUI option 
  
- 
+set guioptions-=m
  " always show the status line
  set laststatus=2 
  
-function! CleverTab()
-   let column = col('.')
- 
-   if column==1
-     return "\<Tab>"
-   elseif getline('.')[column-2] =~ '\S'
-      return "\<C-P>"
-   else
-     return "\<Tab>"
-   endif
- 
-endfunction
- 
-inoremap <Tab> <C-R>=CleverTab()<CR>
 
-"inoremap <C-v> <C-o>P
-nnoremap <C-v> P
  
- " quick fix 
-"  nnoremap qf :copen<CR>
+" for unified operation
+nnoremap <c-v> P
+
+" quick fix 
 "    toggle quickfix window
  nnoremap sqf :QFix<CR>
  nnoremap <a-n> :cnext<CR>
@@ -101,9 +48,7 @@ nnoremap <C-v> P
 "  au BufNew,BufRead *compiler.log nnoremap <buffer> <F5> :lcd %:p:h<CR>:set makeprg=vd_filter.py\ %<CR>:set errorformat=%f@@%l@@%m<CR>:make<CR>
  au BufNew,BufRead *.bat set ft=csh
  
- """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
- " Global 
- """""""""""""""""""""""""""""""""""""""""""""""""""""""""
+ " MY Global 
  nnoremap <leader>gy :call setreg('a', '' )<CR>:g/<C-R>//y A<CR>:let @"=@A<CR>``
  nnoremap <leader>gd :call setreg('a', '' )<CR>:g/<C-R>//d A<CR>:let @"=@A<CR>``
  nnoremap <leader>go :v//d<CR>
@@ -121,7 +66,7 @@ nnoremap <C-v> P
 xnoremap qq :norm @q<CR> 
 xnoremap . :norm .<CR> 
  
- 
+"[edit] type highlight word 
  function! RemoveBoundaryModifier( s )
 	 let s1 = substitute( a:s, '\\<' , '' , '')
 	 let s1 = substitute( s1, '\\>' , '' , '')
@@ -140,7 +85,21 @@ xnoremap . :norm .<CR>
    inoremap <C-r><c-e> <C-R>=RemoveBoundaryModifier(@/)<CR>
    cnoremap <C-r><c-e> <C-R>=RemoveBoundaryModifier(@/)<CR>
  
- set guitablabel=%M%t
+"[edit] Tab complete
+function! CleverTab()
+   let column = col('.')
+ 
+   if column==1
+     return "\<Tab>"
+   elseif getline('.')[column-2] =~ '\S'
+      return "\<C-P>"
+   else
+     return "\<Tab>"
+   endif
+ 
+endfunction
+ 
+inoremap <Tab> <C-R>=CleverTab()<CR>
  
  " clear select mode mapping for xpt
  smapclear 
@@ -157,30 +116,28 @@ xnoremap . :norm .<CR>
  snoremap <C-c> <C-g>y
  
  
- "" search operation """""""""""""""""""""""''
+"" <cmd> search operation """""""""""""""""""""""''
    nnoremap ser :%s/<C-R>///g<left><left>
- 
-   " delete
-   nnoremap sed :%s///g<CR>:normal ''<CR>
 
- "MY function: Search current word ( to replace # * )
-	 function! SearchCurrentWord()
-			" get <cword>
-				let @/="\\<".expand("<cword>")."\\>"
-				call histadd("/", @/ )
+"" <normal> Search current word ( to replace # * )
+	function! SearchCurrentWord()
+	" get <cword>
+		let @/="\\<".expand("<cword>")."\\>"
+		call histadd("/", @/ )
 
-				highlight Search guibg=red guifg=white
+		highlight Search guibg=red guifg=white
 
-	 endfunction
+	endfunction
 
- nnoremap <C-e> :call SearchCurrentWord()<CR>:set hlsearch<CR>
+	nnoremap <c-e> :call SearchCurrentWord()<CR>:set hlsearch<CR>
  
   function! SearchSelect()
-    let temp = @a
-    norm! gv"ay
-    let @/ = '\V' . substitute(escape(@a, '\'), '\n', '\\n', 'g')
-    call histadd("/", @/ )
-    let @a = temp
+      let temp = @a
+      norm! gv"ay
+	  " search 
+      let @/ = '\V' . substitute(escape(@a, '\'), '\n', '\\n', 'g')
+      call histadd("/", @/ )
+      let @a = temp
   endfunction
   xnoremap <C-e> :call SearchSelect()<CR>
 
