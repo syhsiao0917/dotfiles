@@ -32,6 +32,7 @@ set guioptions-=m
  " always show the status line
  set laststatus=2 
  
+nnoremap <c-g> :silent let @*=expand("%:p")<CR>:silent let @"=expand("%:p")<CR>:echo expand("%:p")<CR>:silent let @f=expand("%:p") . ":" . line('.')<CR>
 
  
 " for unified operation
@@ -62,6 +63,8 @@ nnoremap <c-v> P
  nnoremap ssfm :set foldmethod=marker<CR>
  nnoremap ssfs :set foldmethod=syntax<CR>
  
+xnoremap v iw
+
 " play macro on select mode
 xnoremap qq :norm @q<CR> 
 xnoremap . :norm .<CR> 
@@ -116,10 +119,10 @@ inoremap <Tab> <C-R>=CleverTab()<CR>
  snoremap <C-c> <C-g>y
  
  
-"" <cmd> search operation """""""""""""""""""""""''
+"" <cmd> replace @/ """""""""""""""""""""""''
    nnoremap ser :%s/<C-R>///g<left><left>
 
-"" <normal> Search current word ( to replace # * )
+"" <normal> Search cword ( to replace # * )
 	function! SearchCurrentWord()
 	" get <cword>
 		let @/="\\<".expand("<cword>")."\\>"
@@ -141,6 +144,7 @@ inoremap <Tab> <C-R>=CleverTab()<CR>
   endfunction
   xnoremap <C-e> :call SearchSelect()<CR>
 
+"" <normal> replace cword 
 
    " replace to <cword>
      function! ReplaceToCword()
@@ -149,7 +153,7 @@ inoremap <Tab> <C-R>=CleverTab()<CR>
        let cword = expand("<cword>" )
        exec "%s//" . cword .  "/g"
  
-                         call setpos('.', save_cursor)
+	   call setpos('.', save_cursor)
  
        call SearchCurrentWord()
        highlight Search guibg=darkgreen guifg=white
@@ -157,6 +161,8 @@ inoremap <Tab> <C-R>=CleverTab()<CR>
      endfunction
  
    nnoremap sew :call ReplaceToCword()<CR>
+
+
    nnoremap seg :noautocmd vimgrep /<c-r>//g *
  
  "" 
@@ -175,70 +181,54 @@ inoremap <Tab> <C-R>=CleverTab()<CR>
 
  abbr /i /* */<ESC>hhi
  
+ colorscheme koehler
  
- 
- " better speed, but a little danger  
- set noswapfile
- 
-
-
- set guioptions-=T
- set guioptions+=a
- set guioptions+=R
- 
- " auto reload a file 
- set autoread
- 
- set showcmd                     " display incomplete commands
- set incsearch           " do incremental searching
- set mouse=a                             " use mouse in xterm to scroll
- set scrolloff=0                 " 5 lines bevore and after the current line when scrolling
- set noignorecase                  " ignore case
- set smartcase                   " but don't ignore it, when search string contains uppercase letters
- 
- " Buffer """""""""""""""""""""""
-set hidden                     " allow switching buffers, which have unssved changes
- " set bufhidden=delete
- set autowrite " autosave when buffer switch
- " set switchbuf=usetab,newtab
- 
- set showmatch                   " showmatch: Show the matching bracket for the last ')'?
- 
- " imap jj                       <Esc>
- "
  set nocompatible
  syntax on
  filetype plugin indent on
  
- "" windows 
- "set clipboard=unnamed
+ set noswapfile " better speed, but a little danger  
+ set nobackup " no backup 
+ set autoread   " auto reload a file 
+ set autochdir  
  
- nmap <c-F1> :sp $MYVIMRC<CR>
- colorscheme koehler
+ set guioptions-=T " remove toolbar
+ set guioptions+=a " autoselect ???
+ set guioptions+=R " right hand scroller 
+ 
+ 
+ set showcmd             " display incomplete commands
+ set incsearch           " do incremental searching
+ set mouse=a             " use mouse in xterm to scroll
+ set scrolloff=0         " 5 lines bevore and after the current line when scrolling
+ set noignorecase        " ignore case
+ set smartcase                   " but don't ignore it, when search string contains uppercase letters
+ 
+" Buffer """""""""""""""""""""""
+ set hidden                     " allow switching buffers, which have unssved changes
+ set autowrite " autosave when buffer switch
+ 
+ set showmatch                   " showmatch: Show the matching bracket for the last ')'?
  
  set winminheight=0  " AysplitiH§1tS|3aA?!
  set noequalalways  " Ao±?split?·|§a3N?Uaoequal
  
+ set hlsearch
+
  set splitbelow
  set splitright
  set winaltkeys=no " ?IaltO±±imenu
  
- "" basic setting 
+ "" edit basic setting 
  set virtualedit=all
  set nowrap
- set hlsearch
- set autochdir 
  
- set path+=./** " search down
- 
- set nobackup
- 
- ""tab 
-"  set tabstop=8 "stay the same with 8
- set tabstop=4 "stay the same with 8
+ set tabstop=4      "stay the same with 8
  set softtabstop=4
  set shiftwidth=4
  set expandtab
+ 
+ set path+=./** " search down
  
  set smarttab 
  
@@ -248,7 +238,6 @@ set hidden                     " allow switching buffers, which have unssved cha
   
  "When edit tags, tab can't be replaced by space  
  autocmd BufRead tags set noexpandtab 
- 
 
  "always jump to (line,col) be careful of space behind `
  nnoremap ' `
@@ -300,69 +289,30 @@ set hidden                     " allow switching buffers, which have unssved cha
  cnoremap <c-k> <Up>
  cnoremap <c-j> <Down>
  
- nnoremap <F1> :e $MYVIMRC<CR>
- 
  let mapleader = "s"
  nnoremap s <ESC>
  
  """"" command line abbr
-   "" current file 
+ "" current file 
    cabbr  %% <C-R>=expand("%:p:h")<CR>
- " quick command line map, must set wildcharm=<Tab>
- nnoremap <leader>sp :sp <C-R>=expand("%:p:h")<CR>/
  
  
- "" buffer 
- 
- 
- "" toggle 
- nnoremap <c-w><c-w> <c-w>p
-
-function! SP()
-
-  " when substitute find pattern, then do the subt, 
-  " when substitue not find pattern, return the origin pattern 
-  let s =  substitute( getreg('*') , '\(.*\):\(\d\+\)*', '+\2 \1', '' )
-  call setreg ('*', s ) 
-"   echo getreg('*')
-
-endfunction
-
- nnoremap <c-w>gv :call SP()<CR>:vsp <c-r>*<CR>
- nnoremap <c-w>gs :call SP()<CR>:sp <c-r>*<CR>
-
- 
+"" <normal> change to current path
 nnoremap <leader>cd :lcd %:p:h<CR>
-" autocmd BufEnter * silent! lcd %:p:h
 
-
- 
- nnoremap <leader>wp  :s/\v(<\k*%#\k*>)(\_.{-})(<\k+>)/\3\2\1/<CR>
- 
+"" TODO ?? 
  xnoremap / <ESC>/\%V
  xnoremap ? <ESC>/\%V<C-R>/
  
- " " search !!! importtant
- " nnoremap sss :s/<C-R>//
- " xnoremap sss :s/<C-R>//
  
- " split 
- nnoremap <leader>p, :s/,/,\r/g<CR>
- xnoremap <leader>p, :s/,/,\r/g<CR>
- 
- 
- "abbr"
-"  inoremap <c-t> <C-R>=strftime("%Y%m%d %H:%M")<CR>
- 
- 
- "setting Complete 
+"setting Complete 
  set complete=.,w
 "  set completeopt=menu,preview,longest
  set completeopt=menu,preview
  
  set sessionoptions="blank,size,sesdir,slash,tabpages,unix,winpos,winsize"
  
- "" Setting fold 
+"" Setting fold 
  
  set foldcolumn=0
 
@@ -384,8 +334,6 @@ nnoremap <leader>cd :lcd %:p:h<CR>
  
  set foldlevel=3
 
- 
- 
    function! StripTrailingWhiteSpaces()
      let search = @/
      " 'e' means not showing error when none of pattern are found
@@ -418,7 +366,6 @@ nnoremap <leader>cd :lcd %:p:h<CR>
  
  set smartindent
  
-
  "" TabPage """""""""""""""""""""""""""""""
      nnoremap <A-h> :tabp<CR>
      nnoremap <A-l> :tabn<CR>
@@ -427,8 +374,7 @@ nnoremap <leader>cd :lcd %:p:h<CR>
      " move current tabpage to head
      nnoremap <A-)> :tabm 0<CR>xnoremap   
  
-                                
- hi Visual term=None cterm=None gui=None guibg=grey30
+hi Visual term=None cterm=None gui=None guibg=grey30
 
 au filetype autohotkey  let b:comment_string = ';'
 au filetype perl    let b:comment_string = '#'
@@ -442,7 +388,6 @@ au filetype tcl     let b:comment_string = '#'
 au filetype c       let b:comment_string = '\/\/'
 au filetype vim     let b:comment_string = '"'
 au filetype my      let b:comment_string = '//'
-
 
 function! MyComment()
   silent exec 's/^/' . b:comment_string . ' /e'
@@ -458,9 +403,7 @@ xnoremap <c-r> :call MyComment()<CR>
 nnoremap <c-d> :call MyUnComment()<CR>
 xnoremap <c-d> :call MyUnComment()<CR>
 
-xnoremap v iw
 
-nnoremap <c-g> :silent let @*=expand("%:p")<CR>:silent let @"=expand("%:p")<CR>:echo expand("%:p")<CR>:silent let @f=expand("%:p") . ":" . line('.')<CR>
 
 
 " map <F5> :checktime<CR>
@@ -661,22 +604,22 @@ augroup CursorLine
 augroup END
 
 
-function! SplitComma()
-  
-  s/,/,\r/g
-
-endfunction
-
-nnoremap sp,  :call SplitComma()<CR>
-xnoremap sp,  :call SplitComma()<CR>
+" function! SplitComma()
+"   
+"   s/,/,\r/g
+" 
+" endfunction
+" 
+" nnoremap sp,  :call SplitComma()<CR>
+" xnoremap sp,  :call SplitComma()<CR>
 
 " nnoremap srr :checktime<CR>
 
-map <a-k> :bn<CR>
-map <a-j> :bp<CR>
-
-map <a-s-k> :sbn<CR>
-map <a-s-j> :sbp<CR>
+" map <a-k> :bn<CR>
+" map <a-j> :bp<CR>
+" 
+" map <a-s-k> :sbn<CR>
+" map <a-s-j> :sbp<CR>
 
 "" 
 " nnoremap <silent> svl :BufExplorerVerticalSplit<CR>  
@@ -686,7 +629,6 @@ nnoremap <silent> <a-f> :noautocmd BufExplorer<CR>
 nnoremap <silent> sp :let @a=expand("%:p:h")<CR>:sp <C-R>a/
 
 
-
 " let q; open command window
 nnoremap <c-w>; q:
 nnoremap <c-w>/ q/
@@ -694,18 +636,14 @@ nnoremap <c-w>/ q/
 "" Global bookmarker """""""""""
 nnoremap M m
 
-
 "" Execute shell command and store the output to scratch buffer
 command! -nargs=* -complete=shellcmd R new | setlocal buftype=nofile bufhidden=hide noswapfile | r !no_color <args>
-
 
 cabbr %% <C-R>=expand('%:p:h')<CR>
 
 
-" 
-
 " nnoremap <a-e> :e.<CR>
-nnoremap <a-d> :e  C:\Users\SY.Hsiao\Documents\vim_my\prj.my<CR>
+" nnoremap <a-d> :e  C:\Users\SY.Hsiao\Documents\vim_my\prj.my<CR>
 
 
 "----------------------------------------------
@@ -909,32 +847,31 @@ nnoremap <a-d> :e  C:\Users\SY.Hsiao\Documents\vim_my\prj.my<CR>
 " nnoremap <F1> :echo w:prev_buf_history w:curr_buf w:post_buf_history<CR>
 
 
-nnoremap <a-left>  :BufSurfBack<CR>
-nnoremap <a-right> :BufSurfForward<CR>
+" nnoremap <a-left>  :BufSurfBack<CR>
+" nnoremap <a-right> :BufSurfForward<CR>
 
-
-function! DecAndHex(number)
-  let ns = '[.,;:''"<>()^_lL]'      " number separators
-  if a:number =~? '^' . ns. '*[-+]\?\d\+' . ns . '*$'
-     let dec = substitute(a:number, '[^0-9+-]*\([+-]\?\d\+\).*','\1','')
-     echo dec . printf('  ->  0x%X, -(0x%X)', dec, -dec)
-  elseif a:number =~? '^' . ns. '*\%\(h''\|0x\|h\|#\)\?\(\x\+\)' . ns . '*$'
-     let hex = substitute(a:number, '.\{-}\%\(h''\|0x\|#\)\?\(\x\+\).*','\1','')
-     echon '0x' . hex . printf('  ->  %d', eval('0x'.hex))
-     if strpart(hex, 0,1) =~? '[89a-f]' && strlen(hex) =~? '2\|4\|6'
-        " for 8/16/24 bits numbers print the equivalent negative number
-        echon ' ('. float2nr(eval('0x'. hex) - pow(2,4*strlen(hex))) . ')'
-     endif
-     echo
-  else
-     echo "NaN"
-  endif
-endfunction
-nnoremap gn :call DecAndHex(expand("<cword>"))<CR>
-
-nnoremap sr./ :s/\./\//g<CR>
-nnoremap sr/. :s/\//\./g<CR>
-
+" function! DecAndHex(number)
+"   let ns = '[.,;:''"<>()^_lL]'      " number separators
+"   if a:number =~? '^' . ns. '*[-+]\?\d\+' . ns . '*$'
+"      let dec = substitute(a:number, '[^0-9+-]*\([+-]\?\d\+\).*','\1','')
+"      echo dec . printf('  ->  0x%X, -(0x%X)', dec, -dec)
+"   elseif a:number =~? '^' . ns. '*\%\(h''\|0x\|h\|#\)\?\(\x\+\)' . ns . '*$'
+"      let hex = substitute(a:number, '.\{-}\%\(h''\|0x\|#\)\?\(\x\+\).*','\1','')
+"      echon '0x' . hex . printf('  ->  %d', eval('0x'.hex))
+"      if strpart(hex, 0,1) =~? '[89a-f]' && strlen(hex) =~? '2\|4\|6'
+"         " for 8/16/24 bits numbers print the equivalent negative number
+"         echon ' ('. float2nr(eval('0x'. hex) - pow(2,4*strlen(hex))) . ')'
+"      endif
+"      echo
+"   else
+"      echo "NaN"
+"   endif
+" endfunction
+" nnoremap gn :call DecAndHex(expand("<cword>"))<CR>
+" 
+" nnoremap sr./ :s/\./\//g<CR>
+" nnoremap sr/. :s/\//\./g<CR>
+" 
 nnoremap sp; :s/;/;\r/g<CR>
 
 " "" append what you copy 
@@ -944,38 +881,37 @@ nnoremap sp; :s/;/;\r/g<CR>
 " nnoremap gy :call setreg( 'z', @"   )<CR>:call setreg('"', @z)<CR>
 
 
-"" For tagbar '"""""""""""""""""""""""""
-let g:tagbar_type_systemverilog = {
-    \ 'ctagstype': 'systemverilog',
-    \ 'kinds': [
-        \'c:class',
-        \'m:module',
-        \'p:program',
-        \'f:function',
-        \'i:interface',
-        \'e:typedef',
-        \'t:task'
-      \],
-            \ 'sro'        : '.',
-            \ 'kind2scope' : {
-                \ 'c' : 'class',
-                \ 'f' : 'function',
-                \ 't' : 'task'
-            \ },
-            \ 'scope2kind' : {
-                \ 'enum'      : 'g',
-                \ 'namespace' : 'n',
-                \ 'class'     : 'c',
-                \ 'struct'    : 's',
-                \ 'union'     : 'u'
-            \ }
-    \}
+" "" For tagbar '"""""""""""""""""""""""""
+" let g:tagbar_type_systemverilog = {
+"     \ 'ctagstype': 'systemverilog',
+"     \ 'kinds': [
+"         \'c:class',
+"         \'m:module',
+"         \'p:program',
+"         \'f:function',
+"         \'i:interface',
+"         \'e:typedef',
+"         \'t:task'
+"       \],
+"             \ 'sro'        : '.',
+"             \ 'kind2scope' : {
+"                 \ 'c' : 'class',
+"                 \ 'f' : 'function',
+"                 \ 't' : 'task'
+"             \ },
+"             \ 'scope2kind' : {
+"                 \ 'enum'      : 'g',
+"                 \ 'namespace' : 'n',
+"                 \ 'class'     : 'c',
+"                 \ 'struct'    : 's',
+"                 \ 'union'     : 'u'
+"             \ }
+"     \}
+" 
+" 
+" nnoremap stt :TagbarToggle<CR>
 
-
-nnoremap stt :TagbarToggle<CR>
-
-
-nnoremap sta :let &tags+=substitute(expand("%:p:h"), "\(^\/path\/to\/.*/\).*$", "\1", "")<CR>
+" nnoremap sta :let &tags+=substitute(expand("%:p:h"), "\(^\/path\/to\/.*/\).*$", "\1", "")<CR>
 
 " " For easy motion
 " nnoremap gb ssb
@@ -984,20 +920,19 @@ nnoremap sta :let &tags+=substitute(expand("%:p:h"), "\(^\/path\/to\/.*/\).*$", 
 " nnoremap gF ssF
 "
 
-noremap <a-j> J
+" noremap <a-j> J
 
+" function! NumberToggle()
+"   if(&relativenumber == 1)
+"     set number
+"   else
+"     set relativenumber
+"   endif
+" endfunc
+" 
+" nnoremap ssnu :call NumberToggle()<cr>
 
-function! NumberToggle()
-  if(&relativenumber == 1)
-    set number
-  else
-    set relativenumber
-  endif
-endfunc
-
-nnoremap ssnu :call NumberToggle()<cr>
-
-set relativenumber
+" set relativenumber
 " :au FocusLost * :set number
 " :au FocusGained * :set relativenumber
 " autocmd InsertEnter * :set number
@@ -1006,10 +941,10 @@ set relativenumber
 
 """""""
 
-"" UVM dictionary
-set dictionary=/home/syshiao/MY/vim/uvm_dict.vim
-set dictionary+=/home/syshiao/MY/vim/uvm_macro_dict.vim
-set complete+=k
+" "" UVM dictionary
+" set dictionary=/home/syshiao/MY/vim/uvm_dict.vim
+" set dictionary+=/home/syshiao/MY/vim/uvm_macro_dict.vim
+" set complete+=k
 " inoremap <c-t> <c-x><c-]>
 
 
@@ -1057,13 +992,12 @@ au TabEnter * :call LastTab('TabEnter')
 nnoremap <c-Tab> :call LastTab('switch')<CR>
 inoremap <c-Tab> <C-\><C-N>:call LastTab('switch')<CR>
 
-
-"" plugin yankstack
-
-  let g:yankstack_map_keys = 0
-  nmap <c-p> <Plug>yankstack_substitute_older_paste
-  nmap <c-n> <Plug>yankstack_substitute_newer_paste
-
+" "" plugin yankstack
+" 
+"   let g:yankstack_map_keys = 0
+"   nmap <c-p> <Plug>yankstack_substitute_older_paste
+"   nmap <c-n> <Plug>yankstack_substitute_newer_paste
+" 
 
 "" select the text just paste
 nnoremap <expr> gp '`[' . getregtype()[0] . '`]'
@@ -1115,20 +1049,12 @@ let g:ctrlp_follow_symlinks = 1
 " ab #py #!/usr/bin/env python
 
 
-
-
 "" Fugative plugin    
 " auto clean fugative buffers
 autocmd BufReadPost fugitive://* set bufhidden=delete
 
 " add git branch to status line 
 " set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-
-
-
-" "" Change diff color 
-" hi diffAdded ctermfg=Green ctermbg=DarkGray guifg=Green
-" hi diffRemoved ctermfg=Red ctermbg=DarkGray guifg=Red
 
 
 "diffoption 
