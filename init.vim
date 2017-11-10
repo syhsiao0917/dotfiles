@@ -6,7 +6,7 @@ autocmd GUIEnter * set visualbell t_vb=
 
 set nocompatible
 set noswapfile " better speed, but a little danger  
-set nobackup " no backup 
+set nobackup   " no backup 
 set autoread   " auto reload a file 
 set autochdir  
 
@@ -15,7 +15,6 @@ set backspace=indent,eol,start
 
 " keep command or search history
 set history=400
-
 
 "" edit basic setting 
 set paste
@@ -38,6 +37,8 @@ set laststatus=2  " always show the status line
 set list listchars=tab:>-,trail:_
 hi SpecialKey guifg=#333333 
 
+hi Visual term=None cterm=None gui=None guibg=grey50
+
 syntax on
 filetype plugin indent on
 
@@ -45,6 +46,7 @@ set nu
 
 "" MY special mapping 
  nnoremap <c-s> <ESC>:w<CR>
+ inoremap <c-s> <ESC>:w<CR>
 
  nnoremap - "_
 
@@ -69,5 +71,4 @@ set nu
  nnoremap <A-h> :tabp<CR>
  nnoremap <A-l> :tabn<CR>
 
- hi Visual term=None cterm=None gui=None guibg=grey30
 
