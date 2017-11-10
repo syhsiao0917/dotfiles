@@ -33,14 +33,13 @@ set guioptions-=T " remove toolbar
 set guioptions+=a " autoselect ???
 set guioptions+=R " right hand scroller 
 set laststatus=2  " always show the status line
+syntax on
+filetype plugin indent on
 
 set list listchars=tab:>-,trail:_
 hi SpecialKey guifg=#333333 
 
 hi Visual term=None cterm=None gui=None guibg=grey50
-
-syntax on
-filetype plugin indent on
 
 set nu
 
