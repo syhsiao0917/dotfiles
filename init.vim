@@ -26,6 +26,9 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab
 
+"" basic behavior 
+set incsearch
+
 "" GUI
 colorscheme koehler
 set guioptions-=m " remove menu
