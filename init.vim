@@ -39,13 +39,16 @@ filetype plugin indent on
 set list listchars=tab:>-,trail:_
 hi SpecialKey guifg=#333333 
 
-hi Visual term=None cterm=None gui=None guibg=grey50
+hi Visual term=None cterm=None gui=None guibg=grey40
 
 set nu
 
 "" MY special mapping 
  nnoremap <c-s> <ESC>:w<CR>
  inoremap <c-s> <ESC>:w<CR>
+
+ " open file explorer
+ nnoremap <a-e> :e .<CR>
 
  nnoremap - "_
 
