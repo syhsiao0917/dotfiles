@@ -76,4 +76,9 @@ set nu
  nnoremap <A-h> :tabp<CR>
  nnoremap <A-l> :tabn<CR>
 
+ " copy file path 
+ nnoremap <c-g> :silent let @*=expand("%:p")<CR>:silent let @"=expand("%:p")<CR>:echo expand("%:p")<CR>:silent let @f=expand("%:p") . ":" . line('.')<CR>
+
+ " use control v as paste clipboard
+ cnoremap <c-v> <c-r>*
 
