@@ -32,6 +32,9 @@ set expandtab
 "" basic behavior 
 set incsearch
 
+"" file format not dos 
+set fileformat=unix 
+
 "" GUI
 colorscheme koehler
 set guioptions-=m " remove menu
