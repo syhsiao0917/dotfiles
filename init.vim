@@ -17,7 +17,10 @@ set backspace=indent,eol,start
 set history=400
 
 "" edit basic setting 
+set clipboard=unamed  " connect clipboard with vim register
 set paste
+
+"" 
 set virtualedit=all
 set nowrap
 
