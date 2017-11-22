@@ -55,7 +55,8 @@ function _mkdir_cd()  {
 
 alias md='_mkdir_cd'
 
-### insert argument 
+### insert argument  ref: http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
+
 bindkey '^r' insert-last-word
 autoload -Uz copy-earlier-word
 zle -N copy-earlier-word
