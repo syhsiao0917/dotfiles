@@ -31,7 +31,7 @@ function _get_pwd {
 } 
 
 ## for alt+backspace on path 
-export WORDCHARS='*?_[]~=&;!#$%^(){}'
+export WORDCHARS='*?_[]~=&;!.#$%^(){}'
 
 # tip: alt+backspace to delete path 
 # tip: ctrl+y to undo delete
