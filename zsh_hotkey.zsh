@@ -1,7 +1,11 @@
 
 
+## source 
+alias somy="source ~/.zshrc"
+
+## history 
 setopt hist_ignore_space 
-alias cd=" cd" 
+# alias cd=" cd" 
 alias ls=" ls"
 
 
