@@ -1,0 +1,79 @@
+
+
+[alias]
+
+  st = status -s 
+  stt = status -s -uno 
+
+
+	ll = log --graph  --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
+	l = log --graph  -n 10 --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+	la = log --graph  -n 10 --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --all
+	ls = log --graph --name-status -n 10 --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
+	ll = log --graph  -n 30 --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+	lls = log --graph --name-status -n 30 --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
+	lll = log --graph  --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
+	lu = !git log HEAD @{u} --not `git merge-base --all HEAD HEAD@{u}`~ --graph --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+	lus = !git log HEAD @{u} --not `git merge-base --all HEAD HEAD@{u}`~ --name-status --graph --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
+	lm = !git log HEAD MERGE_HEAD --not `git merge-base --all HEAD MERGE_HEAD`~ --graph --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+	lms = !git log HEAD MERGE_HEAD --not `git merge-base --all HEAD MERGE_HEAD`~ --name-status --graph --pretty=format:'%Cred%h%Creset <%an>-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
+  ## TODO append git root 
+  addt = !git rev-parse --show-toplevel |xargs git add -uv 
+
+  unadd = reset --
+
+  mg = merge --no-commit --no-ff
+  unmg = reset --merge 
+
+  unci = reset HEAD^
+  reci = commit --amend --no-edit
+
+  ff = merge --ff-only
+  ffu = merge --ff-only  @{u}
+
+  orig =  "!git reset --hard; git clean -fd "
+
+  rst = reset --hard 
+
+  co =  checkout
+
+  ci  = commit 
+
+  b  = branch -v -v
+  bt = branch --track
+
+  diffc  = diff --cached
+
+  ba = branch -v -v -a
+
+  pub = "!f() { git push -u ${1:-origin} `git symbolic-ref HEAD`; }; f"
+
+	incoming = "!git checkout HEAD remote update -p; git log ..@{u}"
+	outgoing = log @{u}..
+#  root = !pwd -P
+#
+  root  = rev-parse --show-toplevel
+  # show root in relative path 
+  rootr = rev-parse --show-cdup
+
+#  amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
+
+  alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\t=> \\2/' | sort
+
+[user]
+	name = syhsiao0917
+	email = syhsiao0917@fakemail.com
+
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	log = auto
+
+
