@@ -76,4 +76,8 @@
 	branch = auto
 	log = auto
 
+[push]
+	default = simple
+
+
 
