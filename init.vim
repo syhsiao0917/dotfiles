@@ -31,6 +31,7 @@ set expandtab
 
 "" basic behavior 
 set incsearch
+set hlsearch
 
 "" file format not dos 
 set fileformat=unix 
