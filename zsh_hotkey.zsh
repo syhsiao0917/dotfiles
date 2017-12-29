@@ -6,7 +6,7 @@ alias somy="source ~/.zshrc"
 ## history 
 setopt hist_ignore_space 
 # alias cd=" cd" 
-alias ls=" ls"
+alias ls=" ls -F --color"
 
 
 ## control+s as ls 
